@@ -1,0 +1,26 @@
+{
+  "description": "Quickly create mxRoute aliases for websites.",
+  "manifest_version": 2,
+  "name": "mxRoute Aliases",
+  "version": "1.21",
+  "icons": {
+    "48": "icons/mxroute.png"
+  },
+  "options_ui": {
+    "page": "option/options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "browser_action": {
+    "default_icon": "icons/mxroute.png",
+    "default_title": "mxRouteAliases",
+    "default_popup": "popup/choose_mail.html"
+  },
+  "applications": {
+    "gecko": {
+      "id": "{e95b157d-8fc6-47f1-b022-bbe61982c91f}"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+body {
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+  padding: -1px;
+}
+
+button {
+  background-color: #534caf; /* Green */
+  border: none;
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+input[type="email"] {
+  width: 10px; /* Extremely small width */
+}
+
+input[type="email"].custom-width {
+  width: 10ch; /* Width for 10 characters */
+}
