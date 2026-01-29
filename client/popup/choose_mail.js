@@ -1,89 +1,80 @@
-const proxyserver = "https://mxroute-proxy.indianerjonas.de/api/";
+import { createForwarder, listForwarders, isDomainInfoEnabled } from "../services/forwarders.js";
+import { getCurrentTabUrl, renderForwarderOnlyList } from "../services/general.js";
 
-function getCurrentTabUrl(callback) {
-    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-        var tab = tabs[0];
-        var url = new URL(tab.url);
-        callback(url.hostname);
-    }).catch((error) => {
-        console.error("Error getting current tab URL: ", error);
-    });
+// function to display popup info messages
+async function popUpInfo(message) {
+    const notification = document.getElementById("notification");
+    notification.textContent = message;
+    notification.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 3000);
 }
 
-document.getElementById("createMail").addEventListener("click", function () {
-    const config = JSON.parse(localStorage.getItem('config'));
-    if (!config) {
-        console.error("Configuration not found");
-        return;
+// list of all forwarders of the current url
+document.addEventListener("DOMContentLoaded", async () => {
+    const listEl = document.getElementById("forwarderList");
+
+    try {
+        const url = (await getCurrentTabUrl()).replace(/[^a-zA-Z0-9]/g, "_");
+        const forwarders = await listForwarders();
+        renderForwarderOnlyList(forwarders, url);
+    } catch (err) {
+        console.error(err);
+        listEl.innerHTML = "<li>Error loading forwarders.</li>";
     }
-
-    const { subdomain, user, key, user_domain, receiver, domainInfo } = config;
-
-
-    getCurrentTabUrl(function (currentDomain) {
-        if (!currentDomain || !domainInfo) {
-            currentDomain = "";
-        }else currentDomain += "_";
-        var emailPrefix = "alias_" + currentDomain + Math.random().toString(36).substring(2, 15);
-        var email = emailPrefix + "@" + user_domain;
-        navigator.clipboard.writeText(email).then(function () {
-            // console.log("Email copied to clipboard");
-            // console.log(emailPrefix);
-            document.getElementById("createMail").style.backgroundColor = "#4cacaf";
-        }, function (err) {
-            console.error("Could not copy email: ", err);
-        });
-
-        fetch(proxyserver + subdomain + "/CMD_EMAIL_FORWARDER", {
-            method: "POST",
-            headers: {
-                "Authorization": "Basic " + btoa(user + ":" + key),
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: new URLSearchParams({
-                domain: user_domain,
-                action: "create",
-                user: emailPrefix,
-                email: receiver,
-                create: "Create"
-            })
-        });
-    });
 });
 
-document.getElementById("submitCustomMail").addEventListener("click", function () {
-    const config = JSON.parse(localStorage.getItem('config'));
-    if (!config) {
-        console.error("Configuration not found");
-        return;
-    }
-    const { subdomain, user, key, user_domain, receiver, domainInfo } = config;
 
-    const emailPrefix = document.getElementById("emailPrefix").value;
-    if (emailPrefix && emailPrefix.length > 0 && emailPrefix.length <= 32) {
-        const mailAdress = emailPrefix + "@" + user_domain;
-        navigator.clipboard.writeText(mailAdress).then(function () {
-            // console.log("Email copied to clipboard");
-            // console.log(mailAdress);
-            document.getElementById("submitCustomMail").style.backgroundColor = "#4cacaf";
-        }, function (err) {
-            console.error("Could not copy custom email: ", err);
-        });
-        fetch(proxyserver + subdomain + "/CMD_EMAIL_FORWARDER", {
-            method: "POST",
-            headers: {
-                "Authorization": "Basic " + btoa(user + ":" + key),
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: new URLSearchParams({
-                domain: user_domain,
-                action: "create",
-                user: emailPrefix,
-                email: receiver,
-                create: "Create"
-            })
-        });
-    } else {
-        console.error("No custom email entered");
+
+// create forwarder 
+document.getElementById("createMail").addEventListener("click", async function () {
+    let emailPrefix = document.getElementById("emailPrefix").value;
+    if (!emailPrefix || emailPrefix.length > 32) {
+        try {
+            let suffix = "";
+            if (await isDomainInfoEnabled()) {
+                const url = await getCurrentTabUrl();
+                if (!url) {
+                    popUpInfo("Could not get current tab URL");
+                    return;
+                }
+                suffix = "_" + url.replace(/[^a-zA-Z0-9]/g, "_");
+            }
+            emailPrefix ="alias" + suffix +"_" + Math.random().toString(36).substring(2, 10);
+        } catch (err) {
+            console.error(err);
+            popUpInfo(err.message || "Could not generate alias");
+            return;
+        }
     }
+
+
+    try {
+        const forwarderEmail = await createForwarder(emailPrefix);
+        await navigator.clipboard.writeText(forwarderEmail);
+        popUpInfo("Forward created and copied");
+        document.getElementById("createMail").style.backgroundColor = "#4cacaf";
+    } catch (error) {
+        popUpInfo("Error creating forwarder.");
+        console.error("Error creating forwarder:", error);
+        document.getElementById("createMail").style.backgroundColor = "#f28b82";
+    }
+
+
+});
+
+
+// opens options page
+document.getElementById("openOptions").addEventListener("click", function () {
+    if (browser.runtime.openOptionsPage) {
+        browser.runtime.openOptionsPage();
+    } else {
+        window.open(browser.runtime.getURL("option/options.html"));
+    }
+});
+
+// opens forwarders list page
+document.getElementById("openForwarders").addEventListener("click", function () {
+    window.open(browser.runtime.getURL("forwarder_list/forwarder_list.html"));
 });

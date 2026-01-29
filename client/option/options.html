@@ -4,40 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Options</title>
+    <link rel="stylesheet" type="text/css" href="options.css">
 </head>
 <body>
     <div>
-        <h1>Configuration:</h1>
-        <p class="info">You can get a key <a href="https://pixel.mxrouting.net:2222/evo/user/login-keys/keys" target="_blank">here</a>.</p>
+        <h1>Configuration</h1>
+        
         <form id="configForm">
-            <label for="subdomain">MX subdomain:</label>
-            <input type="text" id="subdomain" name="subdomain"><br>
+            <label  for="subdomain">MX subdomain<span class="required">*</span>:</label>
+            <input type="text" id="subdomain" name="subdomain" required><br>
             <small>Example: <strong>pixel</strong></small><br><br>
             
-            <label for="user">Username:</label>
-            <input type="text" id="user" name="user"><br>
+            <label for="user">Username<span class="required">*</span>:</label>
+            <input type="text" id="user" name="user" required><br>
             <small>Example: <strong>username</strong></small><br><br>
             
-            <label for="key">Key:</label>
-            <input type="password" id="key" name="key"><br>
+            <label for="key">Key<span class="required">*</span>:</label>
+            <small class="info">You can get a key <a href="https://panel.mxroute.com/api-keys.php" target="_blank">here</a>.</small>
+            <input type="password" id="key" name="key" required><br>
             <small>Example: <strong>gjhbdfgjerzvtntil7tugbnzes67urgubnhrx7rxutrz6bn8</strong></small><br><br>
             
-            <label for="user_domain">Domainending:</label>
-            <input type="text" id="user_domain" name="user_domain"><br>
+            <label for="user_domain">Domainending<span class="required">*</span>:</label>
+            <input type="text" id="user_domain" name="user_domain" required><br>
             <small>Example: <strong>example.de</strong></small><br><br>
             
-            <label for="receiver">Receiver:</label>
-            <input type="email" id="receiver" name="receiver"><br>
+            <label for="receiver">Receiver<span class="required">*</span>:</label>
+            <input type="email" id="receiver" name="receiver" required><br>
             <small>Example: <strong>receiver@example.de</strong></small><br><br>
             
             <label for="domainInfo">Include Domain Info in alias?: </label>
             <input type="checkbox" id="domainInfo" name="domainInfo"><br><br>
 
-            
+            <label for="proxyDomain">Proxy Domain:</label>
+            <input type="text" id="proxyDomain" name="proxyDomain" placeholder="optional"><br>
+            <small>If you wish to use your own proxy<a href="https://github.com/Indianer-Jonas/mxroute-aliases" target="_blank">(github)</a>.</small><br><br>
             <button type="submit">Save</button>
         </form>
     </div>
 
-    <script src="options.js"></script>
+    <script type="module" src="options.js"></script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 body {
-  background-color: #f0f0f0;
+  background-color: #c8e0e0;
   font-family: Arial, sans-serif;
-  padding: -1px;
+  padding: 0px;
 }
 
 button {
-  background-color: #534caf; /* Green */
+  background-color: #534caf;
   border: none;
   color: white;
   padding: 5px 5px;
@@ -17,10 +17,63 @@ button {
   cursor: pointer;
 }
 
-input[type="email"] {
-  width: 10px; /* Extremely small width */
+button:hover {
+  background-color: #3e3695;
 }
 
+
 input[type="email"].custom-width {
-  width: 10ch; /* Width for 10 characters */
+  width: 10ch;
+    padding: 3px 5px;
+  font-size: 14px;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
 }
+
+button#openOptions {
+  background-color: #777;
+  padding: 5px 8px;
+  margin-left: 5px;
+  border-radius: 4px;
+}
+
+button#openOptions:hover {
+  background-color: #555;
+}
+
+
+/*--- forwarder list ---*/
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    padding: 2px;
+    border-bottom: 1px solid #ddd;
+}
+
+li:last-child {
+    border-bottom: none;
+}
+
+.forwarder-email {
+    font-weight: bold;
+    font-size: 15px;
+    color: #534caf;
+    border-radius: 2px;
+    width: 200px;
+    padding: 2px 2px;
+    background-color: #f0f0ff;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.no-forwarders {
+    font-style: italic;
+    color: #777;
+    padding: 10px;
+}
+/*--- forwarder list ---*/

@@ -1,0 +1,94 @@
+/* Body */
+body {
+    background-color: #c8e0e0; /* light gray-blue background */
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    margin: 0;
+    color: #333;
+}
+
+/* Containers */
+div {
+    max-width: 450px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Headings */
+h1 {
+    text-align: center;
+    color: #534caf;
+}
+
+/* KeyInfo */
+.info {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Form labels */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #444;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+/* Small example text */
+small {
+    display: block;
+    margin-bottom: 15px;
+    color: #888;
+    font-size: 12px;
+}
+
+/* Checkbox spacing */
+input[type="checkbox"] {
+    margin-left: 5px;
+    transform: scale(1.2);
+}
+
+/* Buttons */
+button[type="submit"] {
+    background-color: #534caf;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+
+button[type="submit"]:hover {
+    background-color: #3e3695;
+}
+
+
+input.invalid {
+    border: 1px solid #d93025;
+    background-color: #fdecea;
+}
+
+.required {
+    color: #d93025;
+    margin-left: 4px;
+}
