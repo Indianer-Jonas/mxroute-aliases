@@ -26,7 +26,7 @@ app.use('/api/:subdomain/', (req, res, next) => {
 });
 
 
-// new mxroute api example
+// new mxroute api examples
 
 // create forwarder
 // fetch('https://api.mxroute.com/domains/{domain}/forwarders', {
@@ -132,8 +132,12 @@ app.delete("/deleteForwarder", async (req, res) => {
                 "X-API-Key": key
             }
         });
-        const data = await mxrouteRes.json();
-        res.status(mxrouteRes.status).json(data);
+
+        if (mxrouteRes.status === 204) {
+            return res.sendStatus(204);
+        }
+        const text = await mxrouteRes.text();
+        const data = text ? JSON.parse(text) : null;
     }
     catch (err) {
         console.error("Proxy error:", err);

@@ -5,41 +5,41 @@ const searchInput = document.getElementById("search");
 
 let forwarders = [];
 
+
+// load forwarders on page load
 document.addEventListener("DOMContentLoaded", async () => {
-    const config = JSON.parse(localStorage.getItem("config"));
-
-    if (!config) {
-        listEl.innerHTML = "<li>No configuration found.</li>";
-        return;
-    }
-
     try {
-        const forwarders = await listForwarders();
+        listEl.innerHTML = "<li>Loading…</li>";
+        forwarders = await listForwarders();
         renderList(forwarders);
     } catch (err) {
         console.error(err);
-        listEl.innerHTML = "<li>Error loading< forwarders.</li>";
+        listEl.innerHTML = "<li>" + err.message + "</li>";
     }
 });
 
+
+// search forwarders
 searchInput.addEventListener("input", () => {
     const query = searchInput.value.toLowerCase();
-    const filtered = forwarders.filter(f =>
-        f.alias.toLowerCase().includes(query) ||
-        f.email.toLowerCase().includes(query)
+    const filtered = forwarders.filter(fwd =>
+        fwd.alias.toLowerCase().includes(query) ||
+        fwd.email.toLowerCase().includes(query)
     );
     renderList(filtered);
 });
 
-function renderList(forwarders) {
+
+// render forwarder list
+function renderList(filteredForwarders) {
     listEl.innerHTML = "";
 
-    if (forwarders.length === 0) {
+    if (filteredForwarders.length === 0) {
         listEl.innerHTML = "<li>No forwarders found.</li>";
         return;
     }
 
-    forwarders.forEach(fwd => {
+    filteredForwarders.forEach(fwd => {
         const li = document.createElement("li");
 
         li.innerHTML = `
@@ -49,7 +49,7 @@ function renderList(forwarders) {
         `;
 
 
-        // click to copy email to clipboard
+        // click to copy to clipboard
         const emailDiv = li.querySelector(".forwarder-email");
         emailDiv.style.cursor = "pointer";
         emailDiv.addEventListener("click", async () => {
@@ -67,10 +67,12 @@ function renderList(forwarders) {
         // delete forwarder
         const deleteBtn = li.querySelector("button[type='delete']");
         deleteBtn.addEventListener("click", async () => {
-            const config = JSON.parse(localStorage.getItem("config"));
+            // await confirmation
+            if (!window.confirm("Delete forwarder " + fwd.email + "?")) return;
             try {
-                await deleteForwarder(fwd.email);
-                li.remove();
+                await deleteForwarder(fwd.alias);
+                forwarders = forwarders.filter(item => item.email !== fwd.email);
+                renderList(forwarders);
             } catch (err) {
                 console.error("Error deleting forwarder:", err);
             }

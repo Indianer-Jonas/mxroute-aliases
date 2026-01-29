@@ -1,5 +1,4 @@
 // creates a fowarder and returns the email address
-// const { user_domain, subdomain, key,user, emailPrefix, receiver }
 const DEFAULT_PROXY = JSON.parse(localStorage.getItem("config"))?.proxyDomain || "https://mxroute-proxy.indianerjonas.de";
 
 
@@ -21,7 +20,7 @@ async function loadConfig() {
 }
 
 
-// function checking if domainInfo is enabled
+// function returning if domainInfo is enabled
 export async function isDomainInfoEnabled() {
     const { domainInfo } = await loadConfig();
     return Boolean(domainInfo);
@@ -63,7 +62,6 @@ export async function createForwarder(emailPrefix) {
 
 
 // function returning forwarders
-// const { user_domain, subdomain, key,user }
 export async function listForwarders() {
     const { user_domain, subdomain, user, key, proxyDomain } = await loadConfig();
     const params = new URLSearchParams({ user_domain, subdomain, user, key });
@@ -84,9 +82,10 @@ export async function listForwarders() {
 
 
 // function to delete forwarder
-// const { user_domain, subdomain, user, key, alias }
 export async function deleteForwarder(alias) {
-    if(!alias || alias.length > 32) {
+    if(alias.includes("@")) alias = alias.split("@")[0];
+
+    if(!alias || alias.length > 64) {
         throw new Error("Invalid alias");
     }
     const { user_domain, subdomain, user, key, proxyDomain } = await loadConfig();
@@ -95,10 +94,17 @@ export async function deleteForwarder(alias) {
         method: "DELETE",
         headers: { "Content-Type": "application/json" }
     });
-    const data = await res.json();
+    if (res.status === 204) {
+        return true;
+    }
+
+    const text = await res.text();
+    const data = text ? JSON.parse(text) : null;
+
     if (!res.ok) {
         console.error("MXroute API error:", data);
         throw new Error("MXroute API error");
     }
+
     return true;
 }
