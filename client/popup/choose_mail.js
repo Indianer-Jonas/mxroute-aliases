@@ -24,11 +24,12 @@ async function renderForwarders() {
         const url = (await getCurrentTabUrl()).replace(/[^a-zA-Z0-9]/g, "_");
         forwarders = await listForwarders();
         listEl.innerHTML = "";
-        if (forwarders.length === 0 || !url) {
-            listEl.innerHTML = "<li>No forwarders found.</li>";
+        const forwardersUrl = forwarders.filter(fwd => url && fwd.email.toLowerCase().includes(url));
+        if (forwardersUrl.length === 0 || !url) {
+            listEl.innerHTML = "<li class=\"no-forwarders\">No forwarders for this URL.</li>";
             return;
         }
-        forwarders.forEach(fwd => {
+        forwardersUrl.forEach(fwd => {
             const li = document.createElement("li");
 
             li.innerHTML = `

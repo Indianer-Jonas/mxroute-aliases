@@ -35,7 +35,7 @@ function renderList(filteredForwarders) {
     listEl.innerHTML = "";
 
     if (filteredForwarders.length === 0) {
-        listEl.innerHTML = "<li>No forwarders found.</li>";
+        listEl.innerHTML = "<li class=\"no-forwarders\"> No forwarders found.</li>";
         return;
     }
 

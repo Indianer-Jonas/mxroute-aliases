@@ -109,5 +109,11 @@ li:last-child {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.no-forwarders {
+    font-style: italic;
+    color: #777;
+    padding: 10px;
+}
 /*--- forwarder list ---*/
 
